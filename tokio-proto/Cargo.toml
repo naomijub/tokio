@@ -1,0 +1,12 @@
+[package]
+name = "server-proto"
+version = "0.1.0"
+authors = ["Julia Naomi <jnaomi@thoughtworks.com>"]
+
+[dependencies]
+bytes = "*"
+futures = "*"
+tokio-io = "*"
+tokio-core = "*"
+tokio-proto = "*"
+tokio-service = "*"
