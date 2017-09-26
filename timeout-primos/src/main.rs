@@ -15,6 +15,13 @@ fn main() {
         let res: Result<bool, ()> = Ok(primo);
         res
     });
+    println!("Future Criada");
+
+    if future_primo.wait().unwrap() {
+        println!("Primo");
+    } else {
+        println!("Composto");
+    }
 }
 
 fn eh_primo(numero: u64) -> bool {
