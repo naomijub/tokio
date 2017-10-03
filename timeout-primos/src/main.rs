@@ -1,27 +1,34 @@
 extern crate futures;
 extern crate futures_cpupool;
+extern crate tokio_timer;
+
+use std::time::Duration;
 
 use futures::Future;
 use futures_cpupool::CpuPool;
+use tokio_timer::Timer;
 
 const PRIMO: u64 = 15485867;
 
 fn main() {
-    let pool = CpuPool::new_num_cpus();
 
-    let future_primo = pool.spawn_fn(|| {
-        let primo = eh_primo(PRIMO);
+    let timeout = Timer::default()
+        .sleep(Duration::from_millis(500))
+        .then(|_| Err(()));
 
-        let res: Result<bool, ()> = Ok(primo);
-        res
-    });
-    println!("Future Criada");
+    let primo = CpuPool::new_num_cpus()
+        .spawn_fn(|| {
+            Ok(eh_primo(PRIMO)) //Tente 157
+        });
 
-    if future_primo.wait().unwrap() {
-        println!("Primo");
-    } else {
-        println!("Composto");
-    }
+    match timeout
+        .select(primo)
+        .map(|(ok, _)| ok)
+        .wait() {
+            Ok(true) => println!("Primo"),
+            Ok(false) => println!("Composto"),
+            Err(_) => println!("Timeout"),
+        }
 }
 
 fn eh_primo(numero: u64) -> bool {

@@ -6,3 +6,4 @@ authors = ["Julia Naomi <jnaomi@thoughtworks.com>"]
 [dependencies]
 futures = "*"
 futures-cpupool = "*"
+tokio-timer = "*"
